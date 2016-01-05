@@ -1,0 +1,12 @@
+{
+	"name" : "localized_string_name",
+	"conventions" : ["standard_object","lookup_object"],	
+	"fields" :
+	[
+		{
+			"name" : "name",
+			"type" : "string",
+			"length" : 128
+		}
+	]
+}

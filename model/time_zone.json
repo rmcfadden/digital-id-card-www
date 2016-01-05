@@ -1,0 +1,35 @@
+{
+	"name"  : "time_zone",
+	"conventions" : ["standard_object","lookup_object"],	
+	"fields" :
+	[
+		{
+			"name" : "name",
+			"type" : "string",
+			"length" : 64
+		},
+		{
+			"name" : "display_name",
+			"type" : "string",
+			"length" : 64
+		},
+		{
+			"name" : "daylight_name",
+			"type" : "string",
+			"length" : 64
+		},
+		{
+			"name" : "utc_offset",
+			"type" : "small"
+		},
+		{
+			"name" : "adjust_for_daylight_savings",
+			"type" : "bool"
+		},
+		{
+			"name" : "daylight_savings_adjustment",
+			"type" : "small"
+		}
+
+	]
+}

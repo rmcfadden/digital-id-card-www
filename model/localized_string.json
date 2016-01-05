@@ -1,0 +1,20 @@
+{
+	"name"  : "localized_string",
+	"conventions" : ["standard_object", "lookup_object"],	
+	"fields" :
+	[
+		{
+			"name" : "localized_string_name_id",
+			"type" : "int"
+		},
+		{
+			"name" : "culture_id",
+			"type" : "int"
+		},
+		{
+			"name" : "value",
+			"type" : "string",
+			"length" : 512
+		}
+	]
+}

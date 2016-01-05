@@ -1,0 +1,47 @@
+{
+	"name" : "user_test",
+	"conventions" : ["standard_object"],	
+	"fields" :
+	[
+		{
+			"name" : "email",
+			"type" : "string",
+			"length" : 160
+		},
+		{
+			"name" : "password",
+			"type" : "string",
+			"length" : 128
+		},
+		{
+			"name" : "password_salt",
+			"type" : "string",
+			"length" : 128
+		},
+		{
+			"name" : "is_unsubscribed",
+			"type" : "bool",
+			"default" : false
+		},
+		{
+			"name" : "is_active",
+			"type" : "bool",
+			"default" : false
+		},
+		{
+			"name" : "is_locked",
+			"type" : "bool",
+			"default" : false
+		},
+		{
+			"name" : "last_password_failed_time",
+			"type" : "datetime",
+			"default" : "minimum"
+		},
+		{
+			"name" : "number_password_failed_attempts",
+			"type" : "int",
+			"default" : 0
+		}	
+	]
+}

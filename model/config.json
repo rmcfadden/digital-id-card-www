@@ -1,0 +1,17 @@
+{
+	"name"  : "config",
+	"conventions" : ["standard_object", "lookup_object"],	
+	"fields" :
+	[
+		{
+			"name" : "name",
+			"type" : "string",
+			"length" : 124
+		},
+		{
+			"name" : "value",
+			"type" : "string",
+			"length" : 1024
+		}
+	]
+}

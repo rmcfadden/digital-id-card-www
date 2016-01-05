@@ -1,0 +1,21 @@
+{
+	"name" : "user_key_challenge",
+	"conventions" : ["standard_object"],	
+	"fields" :
+	[
+		{
+			"name" : "user_key_id",
+			"type" : "long"
+		},
+		{
+			"name" : "challenge",
+			"type" : "string",
+			"length" : "1024"
+		},
+		{
+			"name" : "expiry_time",
+			"type" : "datetime",
+			"default" : "maximum"
+		}
+	]
+}

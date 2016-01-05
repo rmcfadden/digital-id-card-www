@@ -1,0 +1,12 @@
+{
+	"name" : "role",
+	"conventions" : ["standard_object","lookup_object"],	
+	"fields" :
+	[
+		{
+			"name" : "name",
+			"type" : "string",
+			"length" : 256
+		}
+	]
+}

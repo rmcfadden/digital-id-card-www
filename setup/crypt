@@ -1,0 +1,29 @@
+#!/usr/bin/env node
+
+var argv = require("optimist");
+
+var createKeys = require("rsa-json");
+
+createRSAKeyPair();
+
+function createRSAKeyPair(length)
+{
+	if(!length)
+		length = 2048;
+
+	
+	createKeys({ "bits" : length }, function(error, result)
+	{
+		if(error)
+		{
+			console.log("error generating key pairs");
+			return;		
+		}
+		
+
+
+		console.log(result.private);
+		console.log(result.public);
+
+	});
+}

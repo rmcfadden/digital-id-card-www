@@ -1,0 +1,35 @@
+{
+	"name"  : "culture",
+	"conventions" : ["standard_object", "lookup_object"],	
+	"fields" :
+	[
+		{
+			"name" : "name",
+			"type" : "string",
+			"length" : 160
+		},
+		{
+			"name" : "display",
+			"type" : "string",
+			"length" : 160
+		},
+		{
+			"name" : "iso639_1",
+			"type" : "string",
+			"length" : 2
+		},
+		{
+			"name" : "iso639_2",
+			"type" : "string",
+			"length" : 3
+		},
+		{
+			"name" : "is_enabled",
+			"type" : "bool"
+		},
+		{
+			"name" : "is_visible",
+			"type" : "bool"
+		}
+	]
+}

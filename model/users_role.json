@@ -1,0 +1,15 @@
+{
+	"name" : "users_role",
+	"conventions" : ["standard_object"],	
+	"fields" :
+	[
+		{
+			"name" : "user_id",
+			"type" : "long"
+		},
+		{
+			"name" : "role_id",
+			"type" : "int"
+		}
+	]
+}

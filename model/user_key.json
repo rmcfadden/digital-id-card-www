@@ -1,0 +1,41 @@
+{
+	"name"  : "user_key",
+	"pluralizedName" : "user_keys",
+	"conventions" : ["standard_object"],	
+	"fields" :
+	[
+		{
+			"name" : "user_id",
+			"type" : "long"
+			
+		},
+		{
+			"name" : "name",
+			"type" : "string",
+			"length" : "128",
+			"default" : "default"
+
+		},
+		{
+			"name" : "public_key",
+			"type" : "string",
+			"length" : 4096
+		},
+		{
+			"name" : "key_length",
+			"type" : "int",
+			"default" : 2048
+		},
+		{
+			"name" : "passphrase",
+			"type" : "string",
+			"length" : 124
+		},
+		{
+			"name" : "is_expired",
+			"type" : "bool",
+			"default" : false
+		}
+
+	]
+}

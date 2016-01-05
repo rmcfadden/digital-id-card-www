@@ -1,0 +1,37 @@
+{
+	"name" : "shard",
+	"conventions" : ["standard_object","lookup_object"],	
+	"fields" :
+	[
+		{
+			"name" : "shard_key",
+			"type" : "string",
+			"length" : 128
+		},
+		{
+			"name" : "start",
+			"type" : "long"
+		},
+		{
+			"name" : "end",
+			"type" : "long"
+		},
+		{
+			"name" : "connection",
+			"type" : "string",
+			"length" : "1024"
+		},
+		{
+			"name" : "is_active",
+			"type" : "bool"
+		},
+		{
+			"name" : "is_down",
+			"type" : "bool"
+		},
+		{
+			"name" : "is_new_supported",
+			"type" : "bool"
+		}
+	]
+}

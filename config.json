@@ -1,0 +1,66 @@
+{
+	"listenPort"  : 8000,
+	"testListenPort" : 8001,
+	"clusterCPUMultiplier" : 2,
+	"wwwRoot" : "public",
+	"servicesRoot" : "api",
+	"resourceRoot" : "localhost",
+	"connections" :
+	{
+		"admin":
+		{
+			"type" 		: "mysql",
+			"host"		: "localhost",
+			"user"		: "admin",
+			"password"	: "abc123!"
+
+		},
+		"user" :
+		{
+			"type" 		: "mysql",
+			"host"		: "localhost",
+			"database"	: "nettools",
+			"user"		: "nettools",
+			"password"	: "nettools123!"
+		},
+
+		"user_test" : 
+		{
+			"type" 		: "mysql",
+			"host"		: "localhost",
+			"database"	: "nettools_test",
+			"user"		: "nettools",
+			"password"	: "nettools123!"
+		}	
+	},
+	"title" : "nettools",
+	"minPasswordLength" : 5,
+	"session" :
+	{
+		"durationSeconds": 2592000,
+		"cipherAlgo" : "aes-128-cbc",
+		"key"    : "@abc123!",
+		"iv"	 : "@abc123!1234ABCD"
+	},
+	"cache" :
+	{
+		"type" : "memcached",
+		"location"  : "localhost:11211",
+		"lifetime"  : 86400,
+		"isEnabled" : true,
+		"includeAppVersion" : true	
+	},
+	"userKeys" :
+	{
+		"challengeLength" : 256,
+		"challengeExpireSeconds" : 600
+			
+	},
+	"cluster" :
+	{
+		"multiProcess" : true,
+		"processModel" : "ports",
+		"ports" : [8000,8001,8002,8003]
+
+	}
+}

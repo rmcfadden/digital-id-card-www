@@ -1,0 +1,40 @@
+{
+	"name" : "session",
+	"conventions" : ["standard_object"],	
+	"fields" :
+	[
+		{
+			"name" : "user_id",
+			"type" : "long"
+		},
+		{
+			"name" : "start_time",
+			"type" : "datetime",
+			"default" : "minimum"
+		},
+		{
+			"name" : "end_time",
+			"type" : "datetime",
+			"default" : "minimum"
+		},
+		{
+			"name" : "last_activity_time",
+			"type" : "datetime",
+			"default" : "minimum"
+		},
+		{
+			"name" : "hit_count",
+			"type" : "int",
+			"default" : 0
+		},
+		{
+			"name" : "ip_address",
+			"type" : "long"
+		},
+		{
+			"name" : "is_expired",
+			"type" : "bool",
+			"default" : false
+		}
+	]
+}

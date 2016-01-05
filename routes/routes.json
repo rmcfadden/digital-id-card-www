@@ -1,0 +1,10 @@
+{
+	"routes":
+	[
+		{ "name" : "/", "view" : "index" },
+		{ "name" : "/ping", "view" : "network-tool", "locals" : { "type" : "ping", "title" : "Ping Tool" } },
+		{ "name" : "/traceroute", "view" : "network-tool", "locals" : { "type" : "traceroute", "title" : "Traceroute Tool" } },
+		{ "name" : "/base64", "view" : "base64", "locals" : { "type" : "base64", "title" : "base64 tool" } }
+
+	]
+}

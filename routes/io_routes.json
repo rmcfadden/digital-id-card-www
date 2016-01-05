@@ -1,0 +1,11 @@
+{
+	"routes":
+	[
+		{
+			"name" : "ping", "controller" : "pings"
+		},
+		{
+			"name" : "traceroute", "controller": "traceroutes"
+		}
+	]
+}

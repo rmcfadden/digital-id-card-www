@@ -1,0 +1,695 @@
+#!/usr/bin/env node
+
+var path = require("path");
+var fs = require("fs");
+var endOfLine = require("os").EOL;
+var _ = require("underscore");
+var fs = require("fs");
+var mysql = require("mysql");
+var async = require("async");
+var config = require("../config");	
+
+
+var connectionInfo = null;
+
+// TODO: load these from config.json
+var  options  = 
+{
+	"seed" : "0",
+	"debug" : "false",
+	"engine" : "innodb"
+}
+
+var currentDatabase = null;
+
+
+var commands = ["setup", "migrate","rollback","status","destroy"];
+
+
+main();
+
+function main()
+{
+	var args = process.argv.slice(2);
+
+	if(args.length == 0)
+	{
+		displayHelp();
+		process.exit(0);
+	}
+
+
+	// read command line
+	var command = args[0].toLowerCase();
+
+	if(!_.contains(commands, command))
+	{
+		displayHelp();
+		process.exit(0);
+	}
+
+	// Set defaults from config
+	if(config && config.connections && config.connections["user"])
+	{
+			var user_info = config.connections["user"];
+			if(user_info.user)
+				options["user"] = user_info.user;
+
+			if(user_info.password)
+				options["password"] = user_info.password;
+
+			if(user_info.database)
+				options["database"] = user_info.database;
+
+	}
+
+	for(var i=1; (i + 1 ) < args.length; i = i + 2)
+	{
+
+		var option_name = args[i];
+		var option_value = args[i + 1];
+
+		if(option_name.indexOf("--") != 0)
+			continue;
+
+		option_name = option_name.substring(2, option_name.length);
+	
+		if(options[option_name])
+		{
+			options[option_name] = option_value;	
+		}
+	}
+
+	if(connectionInfo == null)
+	{
+
+		if(config && config.connections && config.connections["admin"])
+			connectionInfo = config.connections["admin"];
+	}
+
+
+	if(!connectionInfo)
+	{
+		console.log("ConnectionInfo not provided");
+		process.exit(1);
+	}
+
+
+	console.log("Running " + command + " ...");
+
+	eval( command + "();");
+}
+
+
+
+function setup()
+{	
+	console.log("Running setup_schema...");
+
+	readFile(path.resolve(__dirname, "setup_schema.sql"), function(lines)
+	{
+		executeQueryBatch(lines, function(error, data)
+		{
+			processQueryError(error);
+
+			currentDatabase = options.database;
+
+			console.log("Running setup_tables using " + currentDatabase);
+
+			readFile(path.resolve(__dirname, "setup_tables.sql"), function(lines)
+			{
+				executeQueryBatch(lines, finished_callback);
+			});
+
+		});
+	});
+}
+
+
+function destroy()
+{
+	console.log("Using database " + options.database);
+
+	var contents = readFile(path.resolve(__dirname, "destroy.sql"), function(lines)
+	{
+		currentDatabase = options.database;
+		executeQueryBatch(lines, finished_callback);
+	});
+}
+
+
+
+function migrate()
+{
+	console.log("Using database " + options.database);
+	currentDatabase = options.database;
+	
+	getCurrentMigrateNumber(function(number)
+	{
+		var summary = getMigrationSummary();
+		summary.currentMigrateNumber = number;
+
+		if(options.number  && !isNaN(parseInt(options.number)) && options.number != -1)
+			summary.targetMigrateNumber = options.number;
+		else
+			summary.targetMigrateNumber = summary.maxMigrateNumber;
+
+
+		if(summary.currentMigrateNumber >= summary.targetMigrateNumber)
+		{
+			console.log("Migrate is current");
+			process.exit(0);	
+		}
+
+		internalRunMigrations(summary);
+	});
+
+}
+
+
+function internalRunMigrations(summary)
+{
+	internalRunMigration(summary.currentMigrateNumber + 1, summary);
+}
+
+
+function internalRunMigration(i, summary)
+{
+	if(i > summary.targetMigrateNumber)
+	{
+		console.log("Migrate is current");
+		// TODO: display summary
+		process.exit(0);
+	}
+
+	var fileInfo = getMigrationFileInfo(i, summary.migrateFiles);
+	if(fileInfo)
+	{
+		arefilesFound = true;
+		readFile(path.resolve(__dirname + "/migrations/" + fileInfo.fileName), function(lines)
+		{
+			console.log("Apply migration file " + fileInfo.fileName);
+			executeQueryBatch(lines, function(error, data){
+
+				if(error)
+				{
+					console.log("Error running migration " + fileInfo.fileName);
+					console.log(error);
+	
+					addMigrate({"action" : "migrate", "number" : i, "is_success":  0, "error_message": error}, function(error,data){								
+						process.exit(0);
+					});
+				}
+				else
+				{	
+					addMigrate({"action" : "migrate", "number" : i, "is_success":  1, "error_message": ""}, function(error,data){
+						processQueryError(error);
+						internalRunMigration(i + 1, summary);			
+					});				
+				}
+				
+			});
+
+		});
+	}
+	else
+		internalRunMigration(i + 1, summary);
+}
+
+
+function status()
+{
+	console.log("Using database " + options.database);
+	currentDatabase = options.database;
+	
+	getCurrentMigrateNumber(function(number)
+	{
+		var summary = getMigrationSummary();
+		console.log("Current " + number + ", Target " + summary.maxMigrateNumber);
+
+		if(number == summary.maxMigrateNumber)
+			console.log("Migrate is current");
+
+		process.exit(0);
+	});
+}
+
+
+function rollback()
+{
+	console.log("Using database " + options.database);
+	currentDatabase = options.database;
+	
+	getCurrentMigrateNumber(function(number)
+	{
+		var summary = getMigrationSummary();
+		summary.currentMigrateNumber = number;
+
+		if(options.number  && !isNaN(parseInt(options.number)) && options.number != -1)
+			summary.targetMigrateNumber = options.number;
+		else
+			summary.targetMigrateNumber = 0;
+
+		if(summary.currentMigrateNumber <= summary.targetMigrateNumber)
+		{
+			console.log("Rollback is current");
+			process.exit(0);	
+		}
+
+		internalRunRollbacks(summary);
+	});
+}
+
+
+function internalRunRollbacks(summary)
+{
+	internalRunRollback(summary.currentMigrateNumber, summary);
+}
+
+
+function internalRunRollback(i, summary)
+{
+	if(i <= summary.targetMigrateNumber)
+	{
+		console.log("Rollback is current");
+		// TODO: display summary
+		process.exit(0);
+	}
+
+	var fileInfo = getMigrationFileInfo(i, summary.rollbackFiles);
+	if(fileInfo)
+	{
+		arefilesFound = true;
+		readFile(path.resolve(__dirname + "/migrations/" + fileInfo.fileName), function(lines)
+		{
+			console.log("Apply rollback file " + fileInfo.fileName);
+			executeQueryBatch(lines, function(error, data){
+
+				if(error)
+				{
+					console.log("Error running rollback " + fileInfo.fileName);
+					console.log(error);
+	
+					addMigrate({"action" : "rollback", "number" : i, "is_success":  0, "error_message": error}, function(error,data){								
+						process.exit(0);
+					});
+				}
+				else
+				{	
+					addMigrate({"action" : "rollback", "number" : i - 1, "is_success":  1, "error_message": ""}, function(error,data){
+						processQueryError(error);
+						internalRunRollback(i - 1, summary);			
+					});				
+				}
+				
+			});
+
+		});
+	}
+	else
+		internalRunRollback(i - 1, summary);
+}
+
+
+function addMigrate(migrate, callback)
+{
+	var sql = "insert into migrations (uuid,action, number, is_success, error_message, date_added) values(uuid(),'{{action}}',{{number}}, {{is_success}},'{{error_message}}',UTC_TIMESTAMP())";
+
+	var mustache = require("mustache");
+	var merged_sql = mustache.render(sql, migrate);
+
+	executeQuery(merged_sql, function(error, data)
+	{
+		processQueryError(error);
+		callback(error,data);
+	});
+	
+}
+
+
+function getMigrationFileInfo(number, fileInfos)
+{
+	for(var i in fileInfos)
+	{
+		var fileInfo = fileInfos[i];
+		if(fileInfo.Number === number)
+			return fileInfo;
+	}
+
+	return null;
+}
+
+
+
+function displayHelp()
+{
+	var Help = "Usage: dbutil [ setup | migrate | rollback | destroy ] [Options]" + endOfLine + endOfLine
+		+  "    Commands: " + endOfLine
+		+  "          setup         - first time datbase setup " + endOfLine
+		+  "          migrate       - apply database migration scripts" + endOfLine
+		+  "          rollback      - rollback database migration scripts" + endOfLine
+		+  "          status        - get the current migration status" + endOfLine
+		+  "          destroy       - remove the database " + endOfLine + endOfLine
+		+  "    Options: " + endOfLine
+		+  "          --database    - specify the database name (default: loaded)" + endOfLine
+		+  "          --number      - specify the patch number" + endOfLine
+		+  "          --seed        - specify the key seed value (default: 0)" + endOfLine
+		+  "          --debug       - output sql for debugging purposes" + endOfLine
+		+  "          --engine      - specify database engine (default: innodb)" + endOfLine;
+
+	console.log(Help);
+}
+
+
+
+function readFile(path, callback)
+{
+	if (!fs.existsSync(path)) 
+	{
+		console.log("File " + path + " does not exists");
+		process.exit(1);
+	}
+
+
+	var LineByLineReader = require("line-by-line");
+	var lr = new LineByLineReader(path);
+
+	var allLines = [];
+
+	lr.on("error", function (err) 
+	{
+		console.log("Error reading file: " + path);
+		process.exit(0);
+
+	});
+
+	lr.on("line", function (line) 
+	{
+		allLines.push(line);
+	});
+
+	lr.on("end", function () 
+	{
+		if(callback)		
+			callback(allLines);
+	});
+}
+
+
+function finished_callback(error, data)
+{
+
+	processQueryError(error);
+
+	console.log("Finished migration");
+	process.exit(0);
+}
+
+
+function executeQueryBatch(lines, callback)
+{
+	var queries = [];
+	var contents = ""; 
+	for (var i in lines) 
+	{
+  		var line = lines[i];
+		if(line.toLowerCase() == "delimiter ;")
+		{
+			if(contents != "")
+				queries.push(contents);
+
+			contents = "";
+			continue;
+		}
+
+		contents += line + endOfLine;
+	}
+
+	if(contents != ""  && contents != endOfLine )
+		queries.push(contents);
+
+
+	if(queries.length == 0)
+	{
+		callback(null, []);
+		return;	
+	}
+
+
+	var index =0;
+	executeQueries(queries, function(error, data)
+	{
+		callback(error,  data);
+		return;
+	});
+
+}
+
+
+function executeQueries(queries, callback)
+{
+	var all_data = [];
+
+	async.eachSeries(queries,
+		function(query, queryCallback)
+		{
+			executeQuery(query, function(error, data)
+			{
+				
+				if(error)
+				{
+					queryCallback(error);
+					return;	
+				}
+
+				all_data.push(data);
+
+				queryCallback();
+
+			});
+		},
+		function(error)
+		{
+			callback(error, all_data);
+			return;
+		}
+	);
+
+
+	
+}
+
+
+function executeQuery(sql, callback)
+{
+	createConnection(function(error, connection)
+	{
+		if(error)
+		{
+			callback(error, null);
+			return;
+		}
+
+		var mustache = require("mustache");
+		var merged_sql = mustache.render(sql, options);
+
+		var areAllLinesBlank = true;	
+
+		var textItems =  merged_sql.split(endOfLine);	
+		for(var i in textItems)
+		{
+			var textItem = textItems[i];
+			if (! /^\s*$/.test(textItem))
+				areAllLinesBlank = false;
+		}
+
+		if(options.debug === true || options.debug == "true")
+		{
+			console.log("Query debug:");
+			console.log(merged_sql);	
+			console.log("");	
+
+		}
+
+		if(areAllLinesBlank)
+		{
+			if(callback)
+			{
+				callback(null, null);
+				return;		
+			}
+		}
+
+
+		connection.query(merged_sql, function(error, data)
+		{
+			connection.end();
+			callback(error, data);
+
+		});
+	});
+}
+
+
+function getMigrationFiles()
+{
+	return getFilesWithPrefix("migrate");
+}
+
+
+function getRollbackFiles()
+{
+	return getFilesWithPrefix("rollback");
+}
+
+
+function processQueryError(error, query)
+{
+	if(error)
+	{
+		console.log("query error:");
+		console.log(error);
+		process.exit(1);		
+	}
+}
+
+
+function getCurrentMigrateNumber(callback)
+{
+
+	var sql = "select ifnull(number,0) as number from migrations where is_success=1 order by id desc limit 1";
+	executeQuery(sql, function(error, data)
+	{
+		processQueryError(error);
+
+		var result = 0;
+		if(data.length > 0 && data[0].number)
+			result = data[0].number;
+		
+		callback(result)
+
+	});
+	
+	return -1;
+}
+
+
+function getMigrationSummary()
+{
+	var summary = 
+	{
+		"migrateFiles" : [],
+		"maxMigrateNumber" : -1,
+		"rollbackFiles" : [],
+		"maxRollbackNumber" : -1
+
+	};
+
+	var migrateFiles = getMigrationFiles();
+	var maxMigrateNumber = -1;
+
+	for(var i in migrateFiles)
+	{
+		var migrateFile = migrateFiles[i];
+		var fileInfo = splitMigrateFile(migrateFile);
+
+		if(fileInfo != null)
+		{
+			if(parseInt(fileInfo.Number) > maxMigrateNumber)
+				maxMigrateNumber = parseInt(fileInfo.Number);
+			
+			summary.migrateFiles.push(fileInfo);
+		}
+	}
+
+
+	var rollbackFiles = getRollbackFiles();
+	var maxRollbackNumber = -1;
+
+	for(var i in rollbackFiles)
+	{
+		var rollbackFile = rollbackFiles[i];
+		var fileInfo = splitMigrateFile(rollbackFile);
+
+		if(fileInfo != null)
+		{
+			if(parseInt(fileInfo.Number) > maxRollbackNumber)
+				maxRollbackNumber = parseInt(fileInfo.Number);
+
+			summary.rollbackFiles.push(fileInfo);
+		}
+	}
+
+
+	summary.maxMigrateNumber = maxMigrateNumber;
+	summary.maxRollbackNumber = maxRollbackNumber;
+
+	return summary;
+}
+
+
+function splitMigrateFile(fileName)
+{
+	var returnFile = {};
+	returnFile.fileName = fileName;
+	returnFile.Number = -1;
+
+    	
+	if((fileName.match(".sql$") != ".sql"))
+		return null;
+
+	var fileItems = fileName.substring(0, fileName.length - 4).split("_");
+	if(fileItems.length < 2)
+		return null;
+
+	var migrateNumber = fileItems[fileItems.length -1];	
+
+
+	if(!isNaN(migrateNumber))
+		returnFile.Number = parseInt(migrateNumber);
+
+	return returnFile;
+}
+
+
+
+function getFilesWithPrefix(prefix)
+{
+	var migrations = fs.readdirSync(__dirname + "/migrations/");
+
+	var returnMigrations = [];
+	for(var i in migrations) 
+	{
+		var migration = migrations[i];	
+		if(migration.indexOf(prefix) === 0)
+			returnMigrations.push(migration);
+
+	}
+
+	return returnMigrations;
+}
+
+
+
+function createConnection(callback)
+{	
+
+	var connection = mysql.createConnection({
+	    	host     : connectionInfo.host,	      	
+	     	database : currentDatabase,
+	        user     : connectionInfo.user,
+	        password : connectionInfo.password,
+	        supportBigNumbers : true,
+	        timezone : 'Z'
+	});
+
+	callback(null,connection);
+
+/*
+	pool.getConnection(function(error, connection)
+	{
+		callback(error, connection)
+	});*/
+}
+
+

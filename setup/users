@@ -1,0 +1,51 @@
+#!/usr/bin/env node
+
+var usersProvider = require("../lib/providers/users_provider");
+var usersProv = new usersProvider();
+
+var argv = require("optimist")
+	.usage("User utilities\nUsage: $0 --action [action] --email [email] --roles [roles]")
+	.default("action", "new")
+	.demand(["email"])
+	.argv;
+
+
+handleAction();
+
+function handleAction()
+{
+
+	switch(argv.action)
+	{
+		case "new":
+		{
+			createUser(argv.email, argv.password, argv.roles);
+			break;
+		}
+		default:
+		{
+			console.log("action " + argv.action + " not supported");		
+		}
+	}
+}
+
+
+function createUser(email, password, roles)
+{		
+	var splitRoles = [];
+	if(roles)
+		splitRoles = roles.split(",");
+
+	usersProv.createByEmail(email, {password: password, roles: splitRoles}, function(error, result)
+	{
+		if(error)
+		{
+			console.log("Error creating user " + email + ", Message: " + error);
+			process.exit(1);
+		}
+
+		console.log("user with id " + result.user_id + " successfuly created");
+		process.exit();
+	});
+}
+

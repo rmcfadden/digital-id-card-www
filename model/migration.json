@@ -1,0 +1,28 @@
+{
+	"name" : "migration",
+	"conventions" : ["standard_object"],	
+	"fields" :
+	[
+
+		{
+			"name" : "action",
+			"type" : "string",
+			"length" : "32"
+		},
+		{
+			"name" : "migration_number",
+			"type" : "int",
+			"default" : 0
+		}	
+		{
+			"name" : "is_successful",
+			"type" : "bool",
+			"default" : false
+		},
+		{
+			"name" : "error_message",
+			"type" : "string",
+			"length" : "1024"
+		}
+	]
+}

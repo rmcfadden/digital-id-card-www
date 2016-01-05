@@ -1,0 +1,209 @@
+// http://designshack.net/articles/css/10-less-css-examples-you-should-steal-for-your-projects/
+
+//
+// border radius
+//
+
+// Mixin
+.border-radius (@radius: 5px) 
+{
+	-webkit-border-radius: @radius;
+	-moz-border-radius: @radius;
+	border-radius: @radius;
+}
+
+
+// Implementation
+// #somediv 
+// {
+//	border-radius(20px); 
+// } 
+
+// Mixin
+.border-radius-custom (@topleft: 5px, @topright: 5px, @bottomleft: 5px, @bottomright: 5px) 
+{
+	-webkit-border-radius: @topleft @topright @bottomright @bottomleft;
+	-moz-border-radius: @topleft @topright @bottomright @bottomleft;
+	border-radius: @topleft @topright @bottomright @bottomleft;
+}
+
+// Implementation
+// #somediv 
+// {
+//    .border-radius-custom(20px, 20px, 0px, 0px);
+// } 
+
+
+//
+// Box shadow
+//
+
+
+// Mixin
+.box-shadow (@x: 0px, @y: 3px, @blur: 5px, @alpha: 0.5) 
+{
+	-webkit-box-shadow: @x @y @blur rgba(0, 0, 0, @alpha);
+	-moz-box-shadow: @x @y @blur rgba(0, 0, 0, @alpha);
+	box-shadow: @x @y @blur rgba(0, 0, 0, @alpha);
+}
+ 
+// Implementation
+// #somediv
+// {   
+// 	.box-shadow(5px, 5px, 6px, 0.3);
+// } 
+
+
+//
+// Transition
+//
+
+// Mixin
+.transition (@prop: all, @time: 1s, @ease: linear) 
+{
+	-webkit-transition: @prop @time @ease;
+	-moz-transition: @prop @time @ease;
+	-o-transition: @prop @time @ease;
+	-ms-transition: @prop @time @ease;
+	transition: @prop @time @ease;
+}
+ 
+// Implementatio
+//#somediv 
+//{
+//    .transition(all, 0.5s, ease-in);
+//} 
+//
+// 
+//#somediv:hover 
+//{
+//    opacity: 0;
+//} 
+
+
+//
+// Transform
+//
+
+// Mixin
+.transform (@rotate: 90deg, @scale: 1, @skew: 1deg, @translate: 10px) 
+{
+	-webkit-transform: rotate(@rotate) scale(@scale) skew(@skew) translate(@translate);
+	-moz-transform: rotate(@rotate) scale(@scale) skew(@skew) translate(@translate);
+	-o-transform: rotate(@rotate) scale(@scale) skew(@skew) translate(@translate);
+	-ms-transform: rotate(@rotate) scale(@scale) skew(@skew) translate(@translate);
+	transform: rotate(@rotate) scale(@scale) skew(@skew) translate(@translate);
+}
+ 
+// Implementation
+// #someDiv 
+// {
+// 	.transform(5deg, 0.5, 1deg, 0px);
+// } 
+
+
+//
+// Gradients
+//
+
+// Mixin
+.gradient (@origin: left, @start: #ffffff, @stop: #000000) 
+{
+	background-color: @start;
+	background-image: -webkit-linear-gradient(@origin, @start, @stop);
+	background-image: -moz-linear-gradient(@origin, @start, @stop);
+	background-image: -o-linear-gradient(@origin, @start, @stop);
+	background-image: -ms-linear-gradient(@origin, @start, @stop);
+	background-image: linear-gradient(@origin, @start, @stop);
+}
+ 
+// Implementation
+// #someDiv 
+// {
+// 	.gradient(left, #663333, #333333);
+// } 
+
+
+
+
+// Mixin
+.quick-gradient (@origin: left, @alpha: 0.2) 
+{
+	background-color: @start;
+	background-image: -webkit-linear-gradient(@origin, rgba(0,0,0,0.0), rgba(0,0,0,@alpha));
+	background-image: -moz-linear-gradient(@origin, rgba(0,0,0,0.0), rgba(0,0,0,@alpha));
+	background-image: -o-linear-gradient(@origin, rgba(0,0,0,0.0), rgba(0,0,0,@alpha));
+	background-image: -ms-linear-gradient(@origin, rgba(0,0,0,0.0), rgba(0,0,0,@alpha));
+	background-image: linear-gradient(@origin, rgba(0,0,0,0.0), rgba(0,0,0,@alpha));
+}
+ 
+// Implementation
+// #somediv 
+// {
+// 	.quick-gradient(top, 0.2);
+// }
+
+
+//
+// Reflection
+//
+
+// Mixin
+.reflect (@length: 50%, @opacity: 0.2)
+{
+    -webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(@length, transparent), to(rgba(255,255,255,@opacity)));
+}
+ 
+// Implementation
+// #somediv 
+// {
+// 	.reflect(20%, 0.2);
+// }
+
+
+//
+// Complimentary colors
+//
+
+// Mixin
+@base: #663333;
+@complement1: spin(@base, 180);
+@complement2: darken(spin(@base, 180), 5%);
+@lighten1: lighten(@base, 15%);
+@lighten2: lighten(@base, 30%);
+ 
+// Implementation
+//.one   {color: @base;}
+//.two   {color: @complement1;}
+//.three {color: @complement2;}
+//.four  {color: @lighten1;}
+//.five  {color: @lighten2;}
+
+
+//
+// Subtle colors
+//
+// Mixin
+@base: #663333;
+@lighter1: lighten(spin(@base, 5), 10%);
+@lighter2: lighten(spin(@base, 10), 20%);
+@darker1: darken(spin(@base, -5), 10%);
+@darker2: darken(spin(@base, -10), 20%);
+ 
+// Implementation
+//
+//.one   {color: @base;}
+//.two   {color: @lighter1;}
+//.three {color: @lighter2;}
+//.four  {color: @darker1;}
+//.five  {color: @darker2;}
+
+
+
+
+
+//
+html { font-size: 62.5%; } 
+body { font-size: 1.2rem; }
+h1   { font-size: 2.0rem; }
+

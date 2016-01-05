@@ -1,0 +1,68 @@
+<% include header %>
+
+
+
+<h1 class="page-header"><%= title %></h1>
+
+<div id="network-tool" class="tool">
+
+	<div id="tool-control">
+		<input type="text" id="url-text"></input>
+		<button id="action_button">Start</button>
+	</div>
+
+	<div id="results">
+
+	</div>
+
+
+</div>
+
+<script src="/js/tools/network-tools.js?version=<%= version %>"></script>
+
+
+<script>
+
+function toggleControls(isEnabled)
+{		
+	$("#action_button").prop('disabled', !isEnabled);
+}
+
+
+$( document ).ready(function() 
+{
+	toggleControls(false);
+
+	networkTools.load({}, function(){		
+		toggleControls(true);
+	});
+
+	networkTools.onResponse(function(response)
+	{
+		console.log("RESPONSE:");
+		console.log(response);
+
+		$("#results").append(response.response);
+	});
+
+});
+
+$('#action_button').click(function()
+{
+	var url = $("#url-text").val();
+	if(url.length == 0)
+	{
+		return;
+	}
+
+console.log("Pinging url: " + url)
+
+	networkTools.execute(url);
+})
+
+
+
+
+</script>
+
+<% include footer %>

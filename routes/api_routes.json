@@ -1,0 +1,52 @@
+{
+	"routes":
+	[
+		{
+			"name": "user",
+			"methods":
+			[
+				{ "method" : "GET", "name": "me" },
+				{ "method" : "POST" },
+				{ "method" : "PUT" },
+				{ "method" : "POST", "name" : "login" },
+				{ "method" : "POST",  "name" : "logout" }
+			]		
+		},
+		{
+			"name": "role",
+			"methods" :
+			[
+				{ "name" : "/", "controller" : "standard" },
+				{ "name" : ":id", "controller" : "standard" }
+			]
+					
+		},
+		{
+			"name": "localized_string_name",
+			"methods" :
+			[
+				{ "name" : "/", "controller" : "standard" },
+				{ "name" : ":id", "controller" : "standard" }
+			]
+					
+		},
+		{
+			"name": "time_zone",
+			"methods" :
+			[
+				{ "name" : "/", "controller" : "standard" },
+				{ "name" : ":id", "controller" : "standard" }
+			]
+					
+		},
+		{
+			"name": "culture",
+			"methods" :
+			[
+				{ "name" : "/", "controller" : "standard" },
+				{ "name" : ":id", "controller" : "standard" }
+			]
+					
+		}
+	]
+}

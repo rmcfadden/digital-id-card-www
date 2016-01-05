@@ -1,0 +1,36 @@
+{
+	"routes":
+	[
+		{
+			"name": "user",
+			"methods":
+			[
+				{ "method" : "get", "name": "me" },
+				{ "method" : "post" },
+				{ "method" : "PUT" },
+				{ "method" : "POST", "name" : "login" },
+				{ "method" : "POST",  "name" : "logout" }
+			]		
+		},
+		{
+			"name": "role",
+			"methods" :
+			[
+				{ "name" : "/", "controller" : "standard" },
+				{ "name" : ":id", "controller" : "standard" }
+			]
+					
+		},
+		{
+			"name": "resource",
+			"methods" :
+			[
+				{ "name" : "me", "controller" : "standard" },
+				{ "name" : ":id", "controller" : "standard" },
+				{ "method" : "post", "controller" : "standard" },
+				{ "method" : "post", "name" : "doesnotexist", "controller" : "standard" }
+			]
+					
+		}
+	]
+}
