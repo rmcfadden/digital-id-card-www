@@ -6,11 +6,11 @@ test:
 
 migrate:
 	./db/dbutil migrate 
-	./db/dbutil migrate --database  nettools_test
+	./db/dbutil migrate --database  digital_id
 
 setup:
 	./db/dbutil setup 
-	./db/dbutil setup --database nettools_test
+	./db/dbutil setup --database digital_id
 
 dev-recreate:
 	./db/dev_db_recreate

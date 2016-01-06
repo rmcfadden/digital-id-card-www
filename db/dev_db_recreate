@@ -1,11 +1,11 @@
 #!/bin/bash
 
 
-./db/dbutil destroy --database nettools
-./db/dbutil setup --database nettools
-./db/dbutil migrate --database nettools
+./db/dbutil destroy --database digital_id
+./db/dbutil setup --database digital_id
+./db/dbutil migrate --database digital_id
 
-./db/dbutil destroy --database nettools_test
-./db/dbutil setup --database nettools_test
-./db/dbutil migrate --database nettools_test
+./db/dbutil destroy --database digital_id_test
+./db/dbutil setup --database digital_id_test
+./db/dbutil migrate --database digital_id_test
 

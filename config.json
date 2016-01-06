@@ -19,21 +19,21 @@
 		{
 			"type" 		: "mysql",
 			"host"		: "localhost",
-			"database"	: "nettools",
-			"user"		: "nettools",
-			"password"	: "nettools123!"
+			"database"	: "digital_id",
+			"user"		: "digital_id",
+			"password"	: "digital_id123!"
 		},
 
 		"user_test" : 
 		{
 			"type" 		: "mysql",
 			"host"		: "localhost",
-			"database"	: "nettools_test",
-			"user"		: "nettools",
-			"password"	: "nettools123!"
+			"database"	: "digital_id_test",
+			"user"		: "digital_id",
+			"password"	: "digital_id123!"
 		}	
 	},
-	"title" : "nettools",
+	"title" : "digital_id",
 	"minPasswordLength" : 5,
 	"session" :
 	{

@@ -6,7 +6,7 @@ USERPASSWORD="abc123"
 
 # creat the dev user
 echo $USER
-sudo adduser $USER --gecos "nettools,RoomNumber,WorkPhone,HomePhone" --disabled-password
+sudo adduser $USER --gecos "$USER,RoomNumber,WorkPhone,HomePhone" --disabled-password
 echo "$USER:$USERPASSWORD" | sudo chpasswd
 usermod -a -G admin $USER
 
@@ -60,8 +60,8 @@ sudo debconf-set-selections <<< "mysql-server-5.5 mysql-server/root_password_aga
 sudo apt-get -y install mysql-server 
 
 # TODO: mysql admin user setup
-#DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-#mysql -u root -p < $DIR/mysql_create.sql
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+mysql -u root -p < $DIR/mysql_create.sql
 
 # nodejs install
 sudo apt-get -y install python-software-properties python g++ make
