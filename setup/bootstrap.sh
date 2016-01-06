@@ -1,7 +1,7 @@
 #!/bin/bash
 
 MYSQLPASSWORD="123!"
-USER="nettools"
+USER="digital_id"
 USERPASSWORD="abc123"
 
 # creat the dev user
@@ -11,11 +11,11 @@ echo "$USER:$USERPASSWORD" | sudo chpasswd
 usermod -a -G admin $USER
 
 #ubuntu-desktop
-sudo apt-get -y update
-sudo apt-get -y install ubuntu-desktop
-sudo apt-get -y install linux-headers-$(uname -r)
-sudo apt-get -y update
-sudo apt-get -y upgrade
+#sudo apt-get -y update
+#sudo apt-get -y install ubuntu-desktop
+#sudo apt-get -y install linux-headers-$(uname -r)
+#sudo apt-get -y update
+#sudo apt-get -y upgrade
 
 
 # VirtualBox support
@@ -23,10 +23,10 @@ sudo apt-get -y install virtualbox-guest-dkms virtualbox-guest-utils virtualbox-
 
 
 # chrome
-wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
-sudo apt-get -y update
-sudo apt-get -y install google-chrome-stable
+#wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+#sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+#sudo apt-get -y update
+#sudo apt-get -y install google-chrome-stable
 
 
 #git
