@@ -91,6 +91,31 @@ h1, h2, h3, h4, h5, h6 {font-weight:normal;margin:0 0 15px;}
 
 
 
-/*=========================
-  header close
-===========================*/
+/*
+ * header close
+ */
+
+/*
+ * footer start
+ */
+
+#footer{background: #2D312F;text-align: center; padding-top: 25px; padding-bottom: 25px;}
+#footer .block{}
+.footer-content{}
+.footer-content h3{color:#8C9494; font-size: 24px; font-family: 'Raleway', sans-serif; font-weight: 400;margin: 0px; padding-bottom: 30px;}
+.social-icon{}
+.social-icon a{margin-right: 10px;}
+.social-icon a i{background: #5d6461;
+border-radius: 500px;
+color: #2d312f;
+font-size: 20px;
+height: 42px; 
+padding-top: 11px;
+width: 42px;}
+.support-link{padding-top: 25px;}
+.support-link ul{margin:0px; padding: 0px; list-style: none;}
+.support-link ul li{display: inline-block; padding: 0px 10px}
+.support-link ul li a{display: inline-block; color: #8C9494; font-size: 14px}
+/*
+ * footer end
+ */
