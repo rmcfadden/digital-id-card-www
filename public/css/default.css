@@ -1,88 +1,96 @@
-/* 
--------------------------------------------------- 
-Sticky footer style
--------------------------------------------------- 
-*/
-html 
-{
-  position: relative;
-  min-height: 100%;
+/* ==========================================================================
+ *   Base styles
+ * ==========================================================================
+ */
+html,
+button,
+input,
+select,
+textarea {
+    color: #222;
 }
 
-
-body 
-{
-  /* Margin bottom by footer height */
-  padding-top: 50px;
-  margin-bottom: 40px;
+html {
+    font-size: 1em;
+    line-height: 1.4;
 }
 
-
-/* 
--------------------------------------------------- 
-Sticky footer style
--------------------------------------------------- 
-*/
-
-.footer 
-{
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-
-  /* Set the fixed height of the footer here */
-  height: 40px;
-  background-color: #000;
-}
-
-
-
-/* 
--------------------------------------------------- 
-TODO: Sidebar navigation 
--------------------------------------------------- 
-*/
-
-.sidebar 
-{
-  display: none;
-}
-
-@media (min-width: 768px) 
-{
-  .sidebar 
-  {
-    position: fixed;
-    top: 51px;
-    bottom: 50px;
-    left: 0;
-    z-index: 1000;
+hr {
     display: block;
-    padding: 20px;
-    overflow-x: hidden;
-    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-    background-color: #f5f5f5;
-    border-right: 1px solid #eee;
-  }
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
+}
+
+audio,
+canvas,
+img,
+video {
+    vertical-align: middle;
 }
 
 
+fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+
+textarea {
+    resize: vertical;
+}
 
 /*
- -------------------------------------------------- 
- Main content
----------------------------------------------------
- */
+1) Common Css
+2) header
+3) slider
+4) Service
+5) contant
+6) Gallery
+7) Contant-2
+8) testimonial
+9) Submit
+10) footer
 
-.main {
-  padding: 20px;
-}
-@media (min-width: 768px) {
-  .main {
-    padding-right: 40px;
-    padding-left: 40px;
-  }
-}
-.main .page-header {
-  margin-top: 0;
-}
+*/
+
+/*=========================
+    1) Common Css Start
+===========================*/
+
+a, a:active, a:focus, a:active {text-decoration:none !important}
+img {max-width:100%}
+h1, h2, h3, h4, h5, h6 {font-weight:normal;margin:0 0 15px;}
+.clearfix{clear: both}
+
+/*=========================
+     Common Css End
+===========================*/
+
+/*=========================
+  2)header Start
+===========================*/
+
+#header{padding: 40px 0px}
+.block-left{}
+
+#header .block-right{}
+.contact-area{text-align: right; margin-top: 10px;}
+.contact-area ul{margin: 0px; padding: 0px; list-style: none;}
+.contact-area ul li{display: inline-block; margin-left: 40px; color:#3C3D42; font-size: 17px; font-family: 'Raleway', sans-serif; font-weight: 400px; }
+.contact-area ul li i{margin-right: 10px; font-size: 18px; }
+
+
+.nav-logo{margin-right: 30px; margin-top: 12px}
+.navbar-default{background: none; border: none;}
+.navbar-default .navbar-nav > li > a{ color:#8B9090;font-family: 'Raleway', sans-serif; font-weight: 400px; font-size: 14px;}
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus{background: none; color:#3C3D42}
+
+
+
+/*=========================
+  header close
+===========================*/
